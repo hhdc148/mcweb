@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Minecraft Web - 游戏</title>
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link rel="stylesheet" href="css/game.css">
+</head>
+<body>
+
+<div id="loading">
+    <div style="font-size: 20px; font-weight: 600; letter-spacing: -0.02em;">Minecraft Web 1.44.0-全局优化与火焰系统</div>
+    <div style="color: #64748b; margin-top: 8px; font-size: 13px;">加载中...</div>
+    <div class="progress-track"><div class="progress-bar" id="progress-fill"></div></div>
+    <div id="loading-text" style="margin-top: 8px; color: #475569; font-size: 11px; font-family: ui-monospace, monospace;">0 / 0</div>
+    <div id="loading-tip" style="margin-top: 16px; color: #00d4ff; font-size: 12px; max-width: 400px; text-align: center; padding: 0 20px; line-height: 1.5; min-height: 36px; display: flex; align-items: center; justify-content: center;"></div>
+</div>
+
+<div class="inventory-screen" id="inventory">
+    <button class="control-btn" style="position: absolute; top: 16px; right: 16px; border-radius: 4px; width: 36px; height: 36px;" onclick="toggleInventory()">×</button>
+    <div style="text-align: center; margin-bottom: 16px; color: #e2e8f0; font-size: 14px; font-weight: 600; letter-spacing: 0.05em;">
+        <span id="inv-title">创造模式背包</span>
+    </div>
+    <div class="inventory-grid" id="inv-grid"></div>
+</div>
+
+<!-- 合成界面 -->
+<div class="crafting-screen" id="crafting-screen">
+    <!-- 左侧分类栏 -->
+    <div class="crafting-sidebar">
+        <div class="crafting-sidebar-title">
+            <span>📋</span>
+            <span>配方分类</span>
+        </div>
+        <div class="crafting-category active" data-category="all" onclick="filterRecipes('all')">
+            <span>全部配方</span>
+            <span class="crafting-category-count" id="count-all">0</span>
+        </div>
+        <div class="crafting-category" data-category="blocks" onclick="filterRecipes('blocks')">
+            <span>🧱 建筑方块</span>
+            <span class="crafting-category-count" id="count-blocks">0</span>
+        </div>
+        <div class="crafting-category" data-category="tools" onclick="filterRecipes('tools')">
+            <span>⛏ 工具</span>
+            <span class="crafting-category-count" id="count-tools">0</span>
+        </div>
+        <div class="crafting-category" data-category="weapons" onclick="filterRecipes('weapons')">
+            <span>⚔ 武器</span>
+            <span class="crafting-category-count" id="count-weapons">0</span>
+        </div>
+        <div class="crafting-category" data-category="materials" onclick="filterRecipes('materials')">
+            <span>📦 材料</span>
+            <span class="crafting-category-count" id="count-materials">0</span>
+        </div>
+        <div class="crafting-category" data-category="decorations" onclick="filterRecipes('decorations')">
+            <span>🎨 装饰</span>
+            <span class="crafting-category-count" id="count-decorations">0</span>
+        </div>
+    </div>
+
+    <!-- 右侧主区域 -->
+    <div class="crafting-main">
+        <div class="crafting-header">
+            <div class="crafting-title">⚒ 合成台</div>
+            <button class="crafting-close" onclick="toggleCrafting()">×</button>
+        </div>
+
+        <div class="crafting-search">
+            <input type="text" id="recipe-search" placeholder="🔍 搜索配方..." oninput="searchRecipes(this.value)">
+        </div>
+
+        <div class="recipes-grid" id="recipes-grid">
+            <!-- 配方卡片将在这里动态生成 -->
+        </div>
+    </div>
+</div>
+
+<div id="game" style="position: fixed; inset: 0; display: flex; flex-direction: column;">
+    <div class="topbar">
+        <div class="topbar-brand">
+            <div class="topbar-logo"></div>
+            <span id="mode-display">MC Web</span>
+        </div>
+        <div class="topbar-actions">
+            <button class="topbar-btn" onclick="toggleInventory()">背包</button>
+            <button class="topbar-btn topbar-btn-accent" id="crafting-btn" onclick="toggleCrafting()">合成</button>
+            <button class="topbar-btn" onclick="toggleGameMenu()">菜单</button>
+            <button class="topbar-btn topbar-btn-command" id="command-btn" onclick="openCommandConsole()" style="display: none;">命令</button>
+            <button class="topbar-btn" onclick="toggleFS()">全屏</button>
+        </div>
+    </div>
+
+    <div id="viewport" style="flex: 1; position: relative; overflow: hidden; background: #87CEEB;">
+        <canvas id="gl"></canvas>
+        <div class="crosshair"></div>
+        <div class="biome-tag" id="biome-display">草原</div>
+        <div class="time-display" id="time-display"><span class="day">☀ 白天</span></div>
+        
+        <!-- 游戏内菜单 -->
+        <div class="game-menu" id="game-menu">
+            <div class="game-menu-content">
+                <h2 class="game-menu-title">游戏菜单</h2>
+                <button class="game-menu-btn" onclick="continueGame()">继续游戏</button>
+                <button class="game-menu-btn save-btn" onclick="saveAndExit()">保存并退出</button>
+            </div>
+        </div>
+        
+        <!-- 保存进度弹窗 -->
+        <div class="save-progress-modal" id="save-progress-modal">
+            <div class="save-progress-content">
+                <div class="save-progress-spinner"></div>
+                <div class="save-progress-text">正在保存世界...</div>
+            </div>
+        </div>
+        
+        <!-- 挖掘进度条 -->
+        <div class="mining-progress" id="mining-progress">
+            <div class="mining-fill" id="mining-fill"></div>
+        </div>
+        
+        <!-- 生存模式UI -->
+        <div class="survival-ui" id="survival-ui" style="display: none;">
+            <div class="bar-container">
+                <span class="bar-label">❤ 生命</span>
+                <div class="bar-bg">
+                    <div class="health-fill" id="health-fill" style="width: 100%;"></div>
+                </div>
+                <span class="bar-value" id="health-value">20/20</span>
+            </div>
+            <div class="bar-container">
+                <span class="bar-label">🍖 饥饿</span>
+                <div class="bar-bg">
+                    <div class="hunger-fill" id="hunger-fill" style="width: 100%;"></div>
+                </div>
+                <span class="bar-value" id="hunger-value">20/20</span>
+            </div>
+        </div>
+        
+        <div class="ui-panel" style="position: absolute; top: 10px; right: 10px; padding: 8px 12px; min-width: 180px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                <span style="color: #94a3b8;">XYZ:</span>
+                <span id="d-xyz" style="color: #8BC34A; font-weight: 500;">0,0,0</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                <span style="color: #94a3b8;">FPS:</span>
+                <span id="d-fps" style="color: #e2e8f0;">0</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                <span style="color: #94a3b8;">生物:</span>
+                <span id="d-mobs" style="color: #fbbf24;">0</span>
+            </div>
+            <div style="height: 1px; background: rgba(51,65,85,0.5); margin: 6px 0;"></div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                <span style="color: #64748b;">面数:</span>
+                <span id="s-poly" style="color: #cbd5e1;">0</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                <span style="color: #64748b;">区块:</span>
+                <span id="s-chunk" style="color: #cbd5e1;">0</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                <span style="color: #64748b;">生物群系:</span>
+                <span id="s-biome" style="color: #cbd5e1;">-</span>
+            </div>
+            <div style="height: 1px; background: rgba(51,65,85,0.5); margin: 6px 0;"></div>
+            <div style="display: flex; justify-content: space-between;">
+                <span style="color: #94a3b8;">地面:</span>
+                <span id="d-ground" style="color: #cbd5e1;">-</span>
+            </div>
+        </div>
+
+        <div id="left-stick" class="stick" style="left: 24px; bottom: 120px;">
+            <div class="knob" id="knob-left"></div>
+        </div>
+        
+        <div id="right-stick" class="stick">
+            <div class="knob" id="knob-right"></div>
+        </div>
+        
+        <div class="control-ring">
+            <div id="btn-jump" class="control-btn btn-jump">▲</div>
+            <div id="btn-crouch" class="control-btn btn-crouch">⬇</div>
+            <div id="btn-break" class="control-btn btn-break">⛏</div>
+            <div id="btn-place" class="control-btn btn-place">⬛</div>
+        </div>
+
+        <!-- 熔炉交互按钮 -->
+        <div class="furnace-interact-btn" id="furnace-interact-btn" onclick="openFurnaceUI()" style="display: none;">
+            🔥 使用熔炉
+        </div>
+        
+        <!-- 熔炉界面 -->
+        <div class="furnace-ui" id="furnace-ui">
+            <div class="furnace-content">
+                <h2 class="furnace-title">🔥 熔炉</h2>
+                <div class="furnace-slots">
+                    <div class="furnace-slot-group">
+                        <label>原料</label>
+                        <div class="furnace-slot" id="furnace-input" onclick="clickFurnaceSlot('input')">
+                            <div class="slot-content" id="furnace-input-content"></div>
+                        </div>
+                    </div>
+                    <div class="furnace-arrow">➡️</div>
+                    <div class="furnace-slot-group">
+                        <label>燃料</label>
+                        <div class="furnace-slot" id="furnace-fuel" onclick="clickFurnaceSlot('fuel')">
+                            <div class="slot-content" id="furnace-fuel-content"></div>
+                        </div>
+                    </div>
+                    <div class="furnace-arrow">➡️</div>
+                    <div class="furnace-slot-group">
+                        <label>产物</label>
+                        <div class="furnace-slot output" id="furnace-output" onclick="clickFurnaceSlot('output')">
+                            <div class="slot-content" id="furnace-output-content"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="furnace-progress">
+                    <div class="furnace-progress-bar" id="furnace-progress-bar"></div>
+                </div>
+                
+                <!-- 背包区域 -->
+                <div class="furnace-inventory">
+                    <label>点击背包物品放入熔炉</label>
+                    <div class="furnace-inventory-grid" id="furnace-inventory-grid"></div>
+                </div>
+                
+                <button class="furnace-close-btn" onclick="closeFurnaceUI()">关闭</button>
+            </div>
+        </div>
+        
+        <div class="hotbar-container" id="hotbar"></div>
+    </div>
+</div>
+
+<!-- 死亡屏幕 -->
+<div class="death-screen" id="death-screen">
+    <div class="death-title">你死了！</div>
+    <div class="death-score" id="death-score">得分: 0</div>
+    <button class="respawn-btn" onclick="respawnPlayer()">重生</button>
+</div>
+
+<!-- 命令控制台 -->
+<div class="command-console" id="command-console">
+    <div class="command-console-content">
+        <div class="command-header">
+            <span class="command-title">⌨ 命令控制台</span>
+            <button class="command-close" onclick="closeCommandConsole()">×</button>
+        </div>
+        <div class="command-output" id="command-output">
+            <div class="command-line command-info-line">=== Minecraft Web 命令控制台 ===</div>
+            <div class="command-line command-info-line">输入 /help 查看所有可用命令</div>
+            <div class="command-line"></div>
+        </div>
+        <div class="command-input-area">
+            <span class="command-prompt">/</span>
+            <input type="text" class="command-input" id="command-input" placeholder="输入命令..." onkeydown="handleCommandKey(event)">
+            <button class="command-execute" onclick="executeCommand()">执行</button>
+        </div>
+    </div>
+</div>
+
+<script src="js/game.js" defer></script>
+</body>
+</html>

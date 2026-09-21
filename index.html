@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Minecraft Web</title>
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="font-loading"><span>LOADING ...</span></div>
+    <div class="panorama-container">
+        <div class="panorama-bg"></div>
+    </div>
+    
+    <div class="overlay"></div>
+    
+    <!-- 主菜单 -->
+    <div class="content menu-visible" id="main-menu">
+        <h1 class="title">Minecraft Web</h1>
+        
+        <button class="game-btn" onclick="showWorldMenu()">
+            游戏
+        </button>
+        
+        <button class="rose-btn pixel-font" onclick="showJoinUsMenu()">
+            join us
+        </button>
+        
+        <button class="game-btn" onclick="showModStore()">
+            模组商城
+        </button>
+        
+        <button class="game-btn" onclick="showSettings()">
+            设置
+        </button>
+        
+        <p class="subtitle">基于 Three.js 的网页版 Minecraft</p>
+        <p class="version">1.44.0-全局优化与火焰系统</p>
+        
+    </div>
+
+    <!-- 世界选择菜单 -->
+    <div class="world-menu menu-hidden" id="world-menu">
+        <h2 class="mode-title">选择世界</h2>
+        
+        <button class="game-btn" onclick="showModeSelect()">
+            创建世界
+        </button>
+        
+        <button class="game-btn" onclick="showLoadWorld()">
+            读取存档
+        </button>
+        
+        <button class="back-btn" onclick="showMainMenu()" type="button">
+            ← 返回
+        </button>
+    </div>
+    
+    <!-- 模式选择 -->
+    <div class="mode-select menu-hidden" id="mode-select">
+        <h2 class="mode-title">选择游戏模式</h2>
+        
+        <button class="game-btn" onclick="startGame('survival')">
+            生存模式
+        </button>
+        
+        <button class="game-btn" onclick="startGame('creative')">
+            创造模式
+        </button>
+        
+        <!-- 模组选择（只显示已下载的模组，不选则为原版） -->
+        <div class="mod-select-box">
+            <div class="mod-select-title">选择模组</div>
+            <div class="mod-select-list" id="mod-select-list"></div>
+        </div>
+        
+        <!-- 允许作弊选项 -->
+        <div class="cheat-option">
+            <label class="cheat-checkbox">
+                <input type="checkbox" id="allow-cheats" />
+                <span class="checkmark"></span>
+                <span class="cheat-label">允许作弊（允许命令）</span>
+            </label>
+            <p class="cheat-hint">开启后可以使用命令控制台</p>
+        </div>
+        
+        <button class="back-btn" onclick="showWorldMenu()" type="button">
+            ← 返回
+        </button>
+    </div>
+    
+    <!-- 读取存档界面 -->
+    <div class="load-world-menu menu-hidden" id="load-world-menu">
+        <h2 class="mode-title">读取存档</h2>
+        
+        <div class="save-list" id="save-list">
+            <!-- 存档列表将在这里动态生成 -->
+        </div>
+        
+        <div class="no-saves" id="no-saves" style="display: none;">
+            <div class="no-saves-icon">📂</div>
+            <div class="no-saves-text">暂无存档</div>
+            <div class="no-saves-hint">创建一个新世界开始游戏吧！</div>
+        </div>
+        
+        <button class="back-btn" onclick="showWorldMenu()" type="button">
+            ← 返回
+        </button>
+    </div>
+    
+    <!-- 加入我们页面 -->
+    <div class="rose-menu menu-hidden" id="rose-menu">
+        <h2 class="rose-title">join us</h2>
+        
+        <div class="rose-intro">
+            <h3>Join Us!</h3>
+            <p style="font-size: 14px; color: #e2e8f0; margin: 20px 0;">
+                📧 <span style="color: #60a5fa; font-weight: bold;">hinecraft66@outlook.com</span>
+            </p>
+            <p>成为我们的一员！</p>
+            <p>在这里你可以：</p>
+            <ul class="feature-list">
+                <li>🎮 分享游戏心得</li>
+                <li>🏠 获取最新更新</li>
+                <li>👥 结识游戏好友</li>
+                <li>💡 提出建议反馈</li>
+            </ul>
+            <p style="margin-top: 15px; color: #60a5fa;">关注我们，一起探索方块世界！</p>
+        </div>
+        
+        <button class="back-btn" onclick="showMainMenu()" type="button">
+            ← 返回
+        </button>
+    </div>
+    
+    <!-- 模组商城 -->
+    <div class="mod-store-menu menu-hidden" id="mod-store-menu">
+        <h2 class="mode-title">模组商城</h2>
+        
+        <div class="mod-list" id="mod-list">
+            <!-- 模组卡片动态生成 -->
+        </div>
+        
+        <button class="back-btn" onclick="showMainMenu()" type="button">
+            ← 返回
+        </button>
+    </div>
+    
+    <!-- 设置界面 -->
+    <div class="settings-menu menu-hidden" id="settings-menu">
+        <h2 class="settings-title">设置</h2>
+        
+        <div class="settings-container">
+            <div class="setting-item">
+                <span class="setting-label">渲染距离</span>
+                <div class="setting-control">
+                    <button class="setting-btn" onclick="changeSetting('renderDistance', -1)">-</button>
+                    <span class="setting-value" id="renderDistance-value">4</span>
+                    <button class="setting-btn" onclick="changeSetting('renderDistance', 1)">+</button>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <span class="setting-label">视野 (FOV)</span>
+                <div class="setting-control">
+                    <button class="setting-btn" onclick="changeSetting('fov', -5)">-</button>
+                    <span class="setting-value" id="fov-value">75</span>
+                    <button class="setting-btn" onclick="changeSetting('fov', 5)">+</button>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <span class="setting-label">🎵 背景音乐</span>
+                <div class="setting-control">
+                    <div class="toggle-switch" id="music-toggle" onclick="toggleMusicSetting()"></div>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <span class="setting-label">音效</span>
+                <div class="setting-control">
+                    <div class="toggle-switch active" id="sound-toggle" onclick="toggleSetting('sound')"></div>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <span class="setting-label">平滑光照</span>
+                <div class="setting-control">
+                    <div class="toggle-switch active" id="smoothLighting-toggle" onclick="toggleSetting('smoothLighting')"></div>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <span class="setting-label">显示FPS</span>
+                <div class="setting-control">
+                    <div class="toggle-switch active" id="showFps-toggle" onclick="toggleSetting('showFps')"></div>
+                </div>
+            </div>
+            
+            <div class="setting-item" style="cursor: pointer;" onclick="showAbout()">
+                <span class="setting-label">关于</span>
+                <div class="setting-control">
+                    <span style="color: #8BC34A; font-size: 18px;">›</span>
+                </div>
+            </div>
+        </div>
+        
+        <button class="back-btn" onclick="showMainMenu()" type="button">
+            ← 返回
+        </button>
+    </div>
+    
+    <!-- 关于页面 -->
+    <div class="about-menu menu-hidden" id="about-menu">
+        <h2 class="settings-title">关于</h2>
+        
+        <div class="about-container">
+            <div class="about-logo">⛏</div>
+            <div class="about-name">Minecraft Web</div>
+            <div class="about-version">版本 1.44.0-全局优化与火焰系统</div>
+            
+            <div class="about-divider"></div>
+            
+            <div class="about-copyright">
+                <p>© 2026 Yone Inc. & Lizj</p>
+                <p>由 Yone Inc. 与 Lizj 共同打造出品</p>
+            </div>
+            
+            <div class="about-desc">
+                基于 Three.js 开发的网页版 Minecraft
+            </div>
+        </div>
+        
+        <button class="back-btn" onclick="showSettingsFromAbout()" type="button">
+            ← 返回
+        </button>
+    </div>
+    
+    <div class="decoration-blocks">
+        <div class="block block-grass"></div>
+        <div class="block block-dirt"></div>
+        <div class="block block-stone"></div>
+    </div>
+    
+    <!-- 音乐版权提示弹窗 -->
+    <div class="copyright-modal" id="copyright-modal">
+        <div class="copyright-box">
+            <div class="copyright-icon">🎵</div>
+            <div class="copyright-title">音乐版权提示</div>
+            <div class="copyright-text">
+                Minecraft OST Music 受 Microsoft Corp. 版权保护。<br>
+                Minecraft Web 中使用的音乐由第三方提供。
+            </div>
+            <div class="copyright-buttons">
+                <button class="copyright-btn btn-cancel" onclick="onMusicCancel()">退出</button>
+                <button class="copyright-btn btn-confirm" onclick="onMusicConfirm()">知道了</button>
+            </div>
+        </div>
+    </div>
+    
+    <link rel="stylesheet" href="css/style.css">
+    
+    <script src="js/main.js" defer></script>
+</body>
+</html>
