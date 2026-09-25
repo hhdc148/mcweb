@@ -1,0 +1,1369 @@
+
+/* ==================== 本地像素字体 ==================== */
+@font-face {
+    font-family: 'PixelWeb';
+    src: url('../fonts/pixel-web.ttf') format('truetype');
+    font-display: swap;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: #000;
+        }
+        
+        .panorama-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .panorama-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('../panorama.jpg') center center / cover no-repeat;
+            filter: brightness(0.7);
+        }
+        
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 0;
+        }
+        
+        .content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .title {
+            font-family: 'PixelWeb', 'Press Start 2P', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-size: 48px;
+            font-weight: 400;
+            color: #e2e8f0;
+            text-shadow: 
+                4px 4px 0 #3d3d3d,
+                0 0 40px rgba(0, 0, 0, 0.8);
+            letter-spacing: 0.05em;
+            margin-bottom: 60px;
+            animation: titlePulse 2s ease-in-out infinite;
+            line-height: 1.5;
+        }
+        
+        @keyframes titlePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        
+        /* 按钮样式 */
+        .game-btn {
+            width: 280px;
+            height: 60px;
+            background: linear-gradient(to bottom, #7a7a7a 0%, #6a6a6a 100%);
+            border: 3px solid #000;
+            border-radius: 0;
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            box-shadow: 
+                inset 0 2px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.3),
+                0 4px 0 #3d3d3d,
+                0 6px 10px rgba(0, 0, 0, 0.5);
+            text-shadow: 2px 2px 0 #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin: 10px 0;
+        }
+        
+        .game-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 2px solid #a0a0a0;
+            pointer-events: none;
+        }
+        
+        .game-btn:hover {
+            background: linear-gradient(to bottom, #8a8a8a 0%, #7a7a7a 100%);
+        }
+        
+        .game-btn:active {
+            transform: translateY(4px);
+            box-shadow: 
+                inset 0 2px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.3),
+                0 0 0 #3d3d3d,
+                0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Rose按钮 - 蓝色 + 像素字体 */
+        .rose-btn {
+            width: 280px;
+            height: 60px;
+            background: linear-gradient(to bottom, #3b82f6 0%, #2563eb 100%);
+            border: 3px solid #000;
+            border-radius: 0;
+            color: #ffffff;
+            font-family: 'PixelWeb', 'Press Start 2P', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            box-shadow: 
+                inset 0 2px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.3),
+                0 4px 0 #1e40af,
+                0 6px 10px rgba(0, 0, 0, 0.5);
+            text-shadow: 2px 2px 0 #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin: 10px 0;
+            letter-spacing: 2px;
+        }
+        
+        .rose-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 2px solid #60a5fa;
+            pointer-events: none;
+        }
+        
+        .rose-btn:hover {
+            background: linear-gradient(to bottom, #60a5fa 0%, #3b82f6 100%);
+        }
+        
+        .rose-btn:active {
+            transform: translateY(4px);
+            box-shadow: 
+                inset 0 2px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.3),
+                0 0 0 #1e40af,
+                0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* 像素字体 */
+        .pixel-font {
+            font-family: 'PixelWeb', 'Press Start 2P', 'PingFang SC', 'Microsoft YaHei', sans-serif !important;
+            font-size: 10px !important;
+            letter-spacing: 1px;
+        }
+        
+        /* 模式选择界面 */
+        .mode-select, .settings-menu, .about-menu, .rose-menu,
+        .world-menu, .load-world-menu, .mod-store-menu {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .mode-title, .settings-title, .rose-title {
+            font-family: 'PixelWeb', 'Press Start 2P', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-size: 24px;
+            color: #e2e8f0;
+            text-shadow: 3px 3px 0 #3d3d3d;
+            margin-bottom: 40px;
+        }
+        
+        .back-btn {
+            width: 200px;
+            height: 50px;
+            background: linear-gradient(to bottom, #5a5a5a 0%, #4a4a4a 100%);
+            border: 3px solid #000;
+            border-radius: 0;
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            box-shadow: 
+                inset 0 2px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.3),
+                0 4px 0 #3d3d3d,
+                0 6px 10px rgba(0, 0, 0, 0.5);
+            text-shadow: 2px 2px 0 #000;
+            margin-top: 20px;
+        }
+        
+        .back-btn:hover {
+            background: linear-gradient(to bottom, #6a6a6a 0%, #5a5a5a 100%);
+        }
+        
+        .back-btn:active {
+            transform: translateY(4px);
+            box-shadow: 
+                inset 0 2px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.3),
+                0 0 0 #3d3d3d,
+                0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Rose联机界面 */
+        .rose-intro {
+            width: 360px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 3px solid #3b82f6;
+            padding: 25px;
+            margin-bottom: 25px;
+            color: #e2e8f0;
+        }
+        
+        .rose-intro h3 {
+            color: #60a5fa;
+            font-size: 18px;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 0 #000;
+        }
+        
+        .rose-intro p {
+            font-size: 14px;
+            line-height: 1.8;
+            color: #cbd5e1;
+            margin-bottom: 10px;
+        }
+        
+        .rose-intro .feature-list {
+            margin: 15px 0;
+            padding-left: 20px;
+        }
+        
+        .rose-intro .feature-list li {
+            font-size: 13px;
+            color: #94a3b8;
+            margin: 8px 0;
+        }
+        
+        .rose-start-btn {
+            width: 280px;
+            height: 60px;
+            background: linear-gradient(to bottom, #3b82f6 0%, #2563eb 100%);
+            border: 3px solid #000;
+            border-radius: 0;
+            color: #ffffff;
+            font-size: 22px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            box-shadow: 
+                inset 0 2px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.3),
+                0 4px 0 #1e40af,
+                0 6px 10px rgba(0, 0, 0, 0.5);
+            text-shadow: 2px 2px 0 #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin: 10px 0;
+        }
+        
+        .rose-start-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 2px solid #60a5fa;
+            pointer-events: none;
+        }
+        
+        .rose-start-btn:hover {
+            background: linear-gradient(to bottom, #60a5fa 0%, #3b82f6 100%);
+        }
+        
+        .rose-start-btn:active {
+            transform: translateY(4px);
+            box-shadow: 
+                inset 0 2px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.3),
+                0 0 0 #1e40af,
+                0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* 联机大厅 */
+        .lobby-container {
+            width: 360px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 3px solid #3b82f6;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .lobby-status {
+            text-align: center;
+            color: #60a5fa;
+            font-size: 14px;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid #3b82f6;
+        }
+        
+        .room-input-group {
+            margin-bottom: 20px;
+        }
+        
+        .room-input-group label {
+            display: block;
+            color: #e2e8f0;
+            font-size: 14px;
+            margin-bottom: 8px;
+            text-shadow: 1px 1px 0 #000;
+        }
+        
+        .room-input {
+            width: 100%;
+            height: 45px;
+            background: rgba(30, 41, 59, 0.9);
+            border: 2px solid #3b82f6;
+            color: #fff;
+            font-size: 18px;
+            padding: 0 15px;
+            text-align: center;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            letter-spacing: 2px;
+        }
+        
+        .room-input::placeholder {
+            color: #64748b;
+        }
+        
+        .room-input:focus {
+            outline: none;
+            border-color: #60a5fa;
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+        }
+        
+        .lobby-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .lobby-btn {
+            flex: 1;
+            height: 50px;
+            background: linear-gradient(to bottom, #3b82f6 0%, #2563eb 100%);
+            border: 3px solid #000;
+            border-radius: 0;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            box-shadow: 
+                inset 0 2px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.3),
+                0 4px 0 #1e40af,
+                0 6px 10px rgba(0, 0, 0, 0.5);
+            text-shadow: 1px 1px 0 #000;
+        }
+        
+        .lobby-btn:hover {
+            background: linear-gradient(to bottom, #60a5fa 0%, #3b82f6 100%);
+        }
+        
+        .lobby-btn:active {
+            transform: translateY(4px);
+            box-shadow: 
+                inset 0 2px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.3),
+                0 0 0 #1e40af,
+                0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+        
+        .lobby-btn.secondary {
+            background: linear-gradient(to bottom, #7a7a7a 0%, #6a6a6a 100%);
+            box-shadow: 
+                inset 0 2px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.3),
+                0 4px 0 #3d3d3d,
+                0 6px 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .lobby-btn.secondary:hover {
+            background: linear-gradient(to bottom, #8a8a8a 0%, #7a7a7a 100%);
+        }
+        
+        .lobby-btn.secondary:active {
+            box-shadow: 
+                inset 0 2px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.3),
+                0 0 0 #3d3d3d,
+                0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+        
+        .player-list {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid #475569;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        
+        .player-list-title {
+            color: #60a5fa;
+            font-size: 12px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .player-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            color: #e2e8f0;
+            font-size: 14px;
+            border-bottom: 1px solid rgba(71, 85, 105, 0.5);
+        }
+        
+        .player-item:last-child {
+            border-bottom: none;
+        }
+        
+        .player-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #22c55e;
+        }
+        
+        .player-status.host {
+            background: #fbbf24;
+        }
+        
+        /* 设置选项样式 */
+        .settings-container {
+            width: 320px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 3px solid #000;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+        
+        .setting-label {
+            color: #e2e8f0;
+            font-size: 16px;
+            text-shadow: 1px 1px 0 #000;
+        }
+        
+        .setting-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .setting-btn {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(to bottom, #7a7a7a 0%, #6a6a6a 100%);
+            border: 2px solid #000;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .setting-btn:active {
+            transform: translateY(2px);
+        }
+        
+        .setting-value {
+            color: #8BC34A;
+            font-size: 16px;
+            min-width: 50px;
+            text-align: center;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        }
+        
+        .toggle-switch {
+            width: 50px;
+            height: 26px;
+            background: #555;
+            border: 2px solid #000;
+            cursor: pointer;
+            position: relative;
+            transition: background 0.2s;
+        }
+        
+        .toggle-switch.active {
+            background: #8BC34A;
+        }
+        
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            background: #fff;
+            border: 1px solid #000;
+            top: 2px;
+            left: 2px;
+            transition: left 0.2s;
+        }
+        
+        .toggle-switch.active::after {
+            left: 28px;
+        }
+        
+        /* 关于页面样式 */
+        .about-container {
+            width: 320px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 3px solid #000;
+            padding: 30px 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .about-logo {
+            font-size: 64px;
+            margin-bottom: 15px;
+            color: #FFD700;
+            text-shadow: 3px 3px 0 #B8860B;
+        }
+        
+        .about-name {
+            font-family: 'PixelWeb', 'Press Start 2P', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-size: 18px;
+            color: #e2e8f0;
+            text-shadow: 2px 2px 0 #3d3d3d;
+            margin-bottom: 10px;
+        }
+        
+        .about-version {
+            color: #8BC34A;
+            font-size: 14px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            margin-bottom: 20px;
+        }
+        
+        .about-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            margin: 20px 0;
+        }
+        
+        .about-copyright {
+            color: #a0a0a0;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .about-copyright p {
+            margin: 5px 0;
+        }
+        
+        .about-desc {
+            color: #808080;
+            font-size: 12px;
+            font-style: italic;
+        }
+        
+        /* 存档列表样式 */
+        .save-list {
+            width: 360px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+        
+        .save-item {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            border: 3px solid #000;
+            padding: 15px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .save-item:hover {
+            background: rgba(0, 0, 0, 0.8);
+            border-color: #8BC34A;
+        }
+        
+        .save-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(to bottom, #8BC34A 30%, #5D4037 30%);
+            border: 2px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .save-info {
+            flex: 1;
+            text-align: left;
+        }
+        
+        .save-name {
+            color: #e2e8f0;
+            font-size: 16px;
+            font-weight: 700;
+            text-shadow: 1px 1px 0 #000;
+            margin-bottom: 4px;
+        }
+        
+        .save-details {
+            color: #94a3b8;
+            font-size: 12px;
+        }
+        
+        .save-mode {
+            display: inline-block;
+            padding: 2px 8px;
+            background: rgba(139, 195, 74, 0.2);
+            color: #8BC34A;
+            font-size: 11px;
+            margin-right: 8px;
+            border: 1px solid rgba(139, 195, 74, 0.4);
+        }
+        
+        .save-mode.creative {
+            background: rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+            border-color: rgba(0, 212, 255, 0.4);
+        }
+        
+        .no-saves {
+            text-align: center;
+            padding: 40px;
+        }
+        
+        .no-saves-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        
+        .no-saves-text {
+            color: #e2e8f0;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-shadow: 1px 1px 0 #000;
+        }
+        
+        .no-saves-hint {
+            color: #64748b;
+            font-size: 14px;
+        }
+        
+        /* 存档删除按钮 */
+        .save-delete-btn {
+            width: 36px;
+            height: 36px;
+            background: rgba(239, 68, 68, 0.2);
+            border: 2px solid rgba(239, 68, 68, 0.5);
+            border-radius: 4px;
+            color: #ef4444;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            margin-left: 10px;
+        }
+        
+        .save-delete-btn:hover {
+            background: rgba(239, 68, 68, 0.4);
+            border-color: #ef4444;
+            transform: scale(1.1);
+        }
+        
+        .save-item {
+            cursor: default;
+        }
+        
+        .save-icon, .save-info {
+            cursor: pointer;
+        }
+        
+        .subtitle {
+            color: #a0a0a0;
+            font-size: 14px;
+            margin-top: 40px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        }
+        
+        .version {
+            color: #808080;
+            font-size: 12px;
+            margin-top: 8px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        }
+        
+        .decoration-blocks {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 4px;
+            z-index: 1;
+            opacity: 0.6;
+        }
+        
+        .block {
+            width: 32px;
+            height: 32px;
+            image-rendering: pixelated;
+        }
+        
+        .block-grass {
+            background: linear-gradient(to bottom, #8BC34A 30%, #5D4037 30%);
+            border: 2px solid #000;
+        }
+        
+        .block-dirt {
+            background: #5D4037;
+            border: 2px solid #000;
+        }
+        
+        .block-stone {
+            background: #757575;
+            border: 2px solid #000;
+        }
+        
+        /* 作弊选项样式 */
+        .cheat-option {
+            margin: 20px 0;
+            padding: 16px 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid #555;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            min-width: 280px;
+        }
+        
+        .cheat-checkbox {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            padding-left: 32px;
+        }
+        
+        .cheat-checkbox input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            width: 0;
+            height: 0;
+        }
+        
+        .checkmark {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            background: #333;
+            border: 2px solid #777;
+            border-radius: 3px;
+            transition: all 0.2s;
+        }
+        
+        .cheat-checkbox:hover .checkmark {
+            border-color: #aaa;
+        }
+        
+        .cheat-checkbox input:checked ~ .checkmark {
+            background: #4CAF50;
+            border-color: #4CAF50;
+        }
+        
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+            left: 5px;
+            top: 1px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+        
+        .cheat-checkbox input:checked ~ .checkmark:after {
+            display: block;
+        }
+        
+        .cheat-label {
+            color: #e2e8f0;
+            font-size: 16px;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+        
+        .cheat-hint {
+            color: #888;
+            font-size: 12px;
+            margin-top: 6px;
+            margin-left: 40px;
+        }
+        
+        /* 登录按钮 */
+        
+        
+        
+        
+        
+        /* 登录弹窗 */
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        /* ==================== 欢迎启动画面 ==================== */
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+
+        /* 菜单切换动画 */
+        .menu-hidden {
+            display: none !important;
+        }
+        
+        .menu-visible {
+            display: flex !important;
+        }
+        
+        @media (max-width: 768px) {
+            .title {
+                font-size: 28px;
+            }
+            .game-btn, .rose-btn, .rose-start-btn {
+                width: 220px;
+                height: 50px;
+                font-size: 20px;
+            }
+            .mode-title, .settings-title, .rose-title {
+                font-size: 18px;
+            }
+            .settings-container, .about-container, .rose-intro, .lobby-container {
+                width: 280px;
+            }
+            .rose-intro, .lobby-container {
+                padding: 20px;
+            }
+            .about-logo {
+                font-size: 48px;
+            }
+            .about-name {
+                font-size: 14px;
+            }
+        }
+
+/* 版权提示弹窗样式 */
+        .copyright-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .copyright-box {
+            background: rgba(20, 25, 35, 0.98);
+            border: 3px solid #000;
+            padding: 40px;
+            max-width: 450px;
+            text-align: center;
+            box-shadow: 
+                inset 0 2px 0 rgba(255, 255, 255, 0.1),
+                0 10px 40px rgba(0, 0, 0, 0.8);
+            animation: modalAppear 0.3s ease;
+        }
+        
+        @keyframes modalAppear {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        
+        .copyright-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        
+        .copyright-title {
+            color: #e2e8f0;
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 16px;
+            text-shadow: 2px 2px 0 #000;
+        }
+        
+        .copyright-text {
+            color: #94a3b8;
+            font-size: 14px;
+            line-height: 1.8;
+            margin-bottom: 28px;
+        }
+        
+        .copyright-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+        
+        .copyright-btn {
+            padding: 12px 32px;
+            border: 3px solid #000;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
+        }
+        
+        .copyright-btn.btn-cancel {
+            background: linear-gradient(to bottom, #5a5a5a 0%, #4a4a4a 100%);
+            color: #e2e8f0;
+            box-shadow: 
+                inset 0 2px 0 rgba(255, 255, 255, 0.2),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.3),
+                0 4px 0 #2d2d2d;
+        }
+        
+        .copyright-btn.btn-cancel:hover {
+            background: linear-gradient(to bottom, #6a6a6a 0%, #5a5a5a 100%);
+        }
+        
+        .copyright-btn.btn-cancel:active {
+            transform: translateY(4px);
+            box-shadow: 
+                inset 0 2px 0 rgba(255, 255, 255, 0.2),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.3),
+                0 0 0 #2d2d2d;
+        }
+        
+        .copyright-btn.btn-confirm {
+            background: linear-gradient(to bottom, #8BC34A 0%, #689F38 100%);
+            color: #fff;
+            box-shadow: 
+                inset 0 2px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.3),
+                0 4px 0 #33691E;
+        }
+        
+        .copyright-btn.btn-confirm:hover {
+            background: linear-gradient(to bottom, #9CCC65 0%, #7CB342 100%);
+        }
+        
+        .copyright-btn.btn-confirm:active {
+            transform: translateY(4px);
+            box-shadow: 
+                inset 0 2px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.3),
+                0 0 0 #33691E;
+        }
+/* ==================== UI 视觉升级（覆盖层，置于文件末尾生效） ==================== */
+
+/* 全景背景：经典 MC 菜单缓慢平移缩放 */
+.panorama-bg {
+    animation: panoramaDrift 60s ease-in-out infinite alternate;
+    will-change: transform;
+}
+@keyframes panoramaDrift {
+    0%   { transform: scale(1.08) translate(0, 0); }
+    100% { transform: scale(1.18) translate(-2%, -2%); }
+}
+
+/* 暗角：聚焦中心内容 */
+.overlay {
+    background: radial-gradient(ellipse at center, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.55) 100%);
+}
+
+/* 主标题：弱化脉冲，增加层次阴影 */
+.title {
+    animation: none;
+    text-shadow:
+        4px 4px 0 #3d3d3d,
+        8px 8px 0 rgba(0, 0, 0, 0.25),
+        0 0 60px rgba(0, 0, 0, 0.9);
+    margin-bottom: 48px;
+}
+
+/* MC 式按钮悬停：更亮 + 白色描边高亮 */
+.game-btn, .rose-btn, .rose-start-btn {
+    transition: background 0.12s ease, transform 0.08s ease, box-shadow 0.12s ease;
+}
+.game-btn:hover, .rose-start-btn:hover {
+    background: linear-gradient(to bottom, #94a860 0%, #7a9a4d 100%);
+    transform: translateY(-1px);
+    box-shadow:
+        inset 0 2px 0 rgba(255, 255, 255, 0.4),
+        inset 0 -2px 0 rgba(0, 0, 0, 0.3),
+        0 5px 0 #4a6329,
+        0 8px 16px rgba(0, 0, 0, 0.55);
+}
+.game-btn:hover::before, .rose-start-btn:hover::before {
+    border-color: #d4e8b0;
+}
+.rose-btn:hover {
+    transform: translateY(-1px);
+    box-shadow:
+        inset 0 2px 0 rgba(255, 255, 255, 0.4),
+        inset 0 -2px 0 rgba(0, 0, 0, 0.3),
+        0 5px 0 #1e40af,
+        0 8px 16px rgba(0, 0, 0, 0.55);
+}
+
+/* 键盘可达性焦点样式 */
+.game-btn:focus-visible, .rose-btn:focus-visible,
+
+/* 副标题与版本信息排版 */
+.subtitle { letter-spacing: 1px; opacity: 0.85; }
+.version  { font-family: ui-monospace, monospace; opacity: 0.55; }
+
+/* 菜单面板切换过渡 */
+.content, .world-menu, .mode-select, .settings-menu, .rose-menu {
+    animation: menuFadeUp 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes menuFadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* 减少动态效果偏好支持 */
+@media (prefers-reduced-motion: reduce) {
+    .panorama-bg, .title { animation: none !important; }
+}
+
+
+/* ==================== 字体就绪后再显示主页 ==================== */
+#main-menu {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease;
+}
+body.ready #main-menu {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* 字体加载中的极简提示 */
+#font-loading {
+    position: fixed;
+    inset: 0;
+    z-index: 5;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 8vh;
+    background: #000;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+}
+#font-loading span {
+    color: #64748b;
+    font-size: 12px;
+    letter-spacing: 4px;
+    font-family: ui-monospace, monospace;
+    animation: fontLoadingBlink 1.2s ease-in-out infinite;
+}
+@keyframes fontLoadingBlink {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+}
+body.ready #font-loading {
+    opacity: 0;
+}
+
+/* ==================== 模组商城 ==================== */
+.mod-store-menu {
+    animation: menuFadeUp 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.mod-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: min(92vw, 520px);
+    max-height: 56vh;
+    overflow-y: auto;
+    padding: 4px;
+    margin-bottom: 24px;
+}
+
+.mod-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    background: rgba(15, 23, 42, 0.85);
+    border: 3px solid #000;
+    box-shadow:
+        inset 0 2px 0 rgba(255, 255, 255, 0.08),
+        0 4px 0 #1a1a1a,
+        0 6px 12px rgba(0, 0, 0, 0.5);
+    transition: border-color 0.15s ease;
+}
+
+.mod-card.installed {
+    border-color: #8BC34A;
+    box-shadow:
+        inset 0 2px 0 rgba(255, 255, 255, 0.08),
+        0 4px 0 #33691E,
+        0 6px 12px rgba(0, 0, 0, 0.5);
+}
+
+.mod-icon {
+    font-size: 34px;
+    width: 56px;
+    height: 56px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(30, 41, 59, 0.9);
+    border: 2px solid rgba(71, 85, 105, 0.6);
+}
+
+.mod-info { flex: 1; min-width: 0; }
+
+.mod-name {
+    font-family: 'PixelWeb', 'Press Start 2P', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    font-size: 15px;
+    color: #e2e8f0;
+    text-shadow: 2px 2px 0 #000;
+}
+
+.mod-name-en {
+    font-size: 11px;
+    color: #64748b;
+    text-shadow: none;
+    margin-left: 6px;
+}
+
+.mod-meta {
+    font-size: 11px;
+    color: #94a3b8;
+    margin: 3px 0 6px;
+    font-family: ui-monospace, monospace;
+}
+
+.mod-desc {
+    font-size: 12px;
+    color: #cbd5e1;
+    line-height: 1.5;
+}
+
+.mod-install-btn {
+    flex-shrink: 0;
+    min-width: 74px;
+    height: 40px;
+    padding: 0 14px;
+    background: linear-gradient(to bottom, #8BC34A 0%, #689F38 100%);
+    border: 3px solid #000;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'PixelWeb', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    cursor: pointer;
+    text-shadow: 1px 1px 0 #000;
+    box-shadow:
+        inset 0 2px 0 rgba(255, 255, 255, 0.3),
+        0 3px 0 #33691E;
+    transition: filter 0.1s ease;
+}
+
+.mod-install-btn:hover { filter: brightness(1.1); }
+
+.mod-install-btn:active {
+    transform: translateY(3px);
+    box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.3), 0 0 0 #33691E;
+}
+
+.mod-install-btn.uninstall {
+    background: linear-gradient(to bottom, #7a7a7a 0%, #6a6a6a 100%);
+    box-shadow:
+        inset 0 2px 0 rgba(255, 255, 255, 0.3),
+        0 3px 0 #3d3d3d;
+}
+
+.mod-install-btn.uninstall:active {
+    box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.3), 0 0 0 #3d3d3d;
+}
+
+/* ==================== 创建世界：模组选择 ==================== */
+.mod-select-box {
+    width: 280px;
+    margin-bottom: 20px;
+    padding: 12px 14px;
+    background: rgba(15, 23, 42, 0.8);
+    border: 3px solid #000;
+    box-shadow:
+        inset 0 2px 0 rgba(255, 255, 255, 0.08),
+        0 4px 0 #1a1a1a;
+}
+
+.mod-select-title {
+    font-family: 'PixelWeb', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    font-size: 13px;
+    color: #8BC34A;
+    text-shadow: 2px 2px 0 #000;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.mod-select-empty {
+    font-size: 12px;
+    color: #64748b;
+    text-align: center;
+    padding: 6px 0;
+}
+
+.mod-select-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    background: rgba(30, 41, 59, 0.6);
+    border: 2px solid rgba(71, 85, 105, 0.5);
+    cursor: pointer;
+    transition: border-color 0.15s ease;
+    user-select: none;
+}
+
+.mod-select-item:hover { border-color: #8BC34A; }
+
+.mod-select-item input { display: none; }
+
+.mod-select-item .checkmark {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid #475569;
+    position: relative;
+}
+
+.mod-select-item input:checked + .checkmark {
+    background: #8BC34A;
+    border-color: #689F38;
+}
+
+.mod-select-item input:checked + .checkmark::after {
+    content: '✓';
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+    text-shadow: 1px 1px 0 #000;
+}
+
+.mod-select-icon { font-size: 18px; }
+
+.mod-select-name {
+    font-size: 13px;
+    color: #e2e8f0;
+    font-weight: 700;
+    text-shadow: 1px 1px 0 #000;
+}
+
+.mod-select-en {
+    font-size: 10px;
+    color: #64748b;
+    font-family: ui-monospace, monospace;
+}

@@ -1,0 +1,1502 @@
+
+/* ==================== 本地像素字体 ==================== */
+@font-face {
+    font-family: 'PixelWeb';
+    src: url('../fonts/pixel-web.ttf') format('truetype');
+    font-display: swap;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: system-ui, -apple-system, sans-serif; 
+            background: #020617; 
+            overflow: hidden; 
+            touch-action: none; 
+            user-select: none; 
+        }
+        
+        .ui-panel { 
+            background: rgba(2, 6, 23, 0.9); 
+            border: 1px solid rgba(51, 65, 85, 0.6); 
+            backdrop-filter: blur(8px); 
+            border-radius: 4px; 
+            color: #f8fafc; 
+            font-size: 11px; 
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace; 
+            line-height: 1.4; 
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        
+        .slot { 
+            width: 44px; 
+            height: 44px; 
+            background: rgba(15, 23, 42, 0.95); 
+            border: 1px solid rgba(71, 85, 105, 0.5); 
+            border-radius: 2px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            cursor: pointer; 
+            transition: all 0.15s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .slot.active { 
+            border-color: #e2e8f0; 
+            background: rgba(30, 41, 59, 0.95); 
+            box-shadow: 0 0 0 1px rgba(226, 232, 240, 0.3), inset 0 0 8px rgba(226,232,240,0.1);
+        }
+        .slot:active { transform: scale(0.96); }
+        
+        .block-preview {
+            width: 28px;
+            height: 28px;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: rotate3d 8s linear infinite;
+        }
+        @keyframes rotate3d {
+            from { transform: rotateX(-15deg) rotateY(0deg); }
+            to { transform: rotateX(-15deg) rotateY(360deg); }
+        }
+        .block-face {
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            image-rendering: pixelated;
+            backface-visibility: hidden;
+            border: 0.5px solid rgba(0,0,0,0.2);
+        }
+        .face-front  { transform: translateZ(14px); }
+        .face-back   { transform: rotateY(180deg) translateZ(14px); }
+        .face-right  { transform: rotateY(90deg) translateZ(14px); }
+        .face-left   { transform: rotateY(-90deg) translateZ(14px); }
+        .face-top    { transform: rotateX(90deg) translateZ(14px); }
+        .face-bottom { transform: rotateX(-90deg) translateZ(14px); }
+        
+        .inventory-screen {
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 6, 23, 0.95);
+            backdrop-filter: blur(12px);
+            z-index: 100;
+            display: none;
+            flex-direction: column;
+            padding: 16px;
+            overflow-y: auto;
+        }
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(52px, 1fr));
+            gap: 4px;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 12px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+            border-radius: 4px;
+        }
+        
+        .control-ring {
+            position: absolute;
+            right: 24px;
+            bottom: 120px;
+            width: 140px;
+            height: 140px;
+            pointer-events: none;
+        }
+        
+        .control-btn { 
+            width: 52px; 
+            height: 52px; 
+            border-radius: 50%; 
+            background: rgba(2, 6, 23, 0.8); 
+            border: 1px solid rgba(71, 85, 105, 0.5); 
+            color: #e2e8f0; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 20px; 
+            touch-action: none; 
+            transition: all 0.1s; 
+            backdrop-filter: blur(4px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            pointer-events: auto;
+            position: absolute;
+        }
+        .control-btn:active { 
+            background: rgba(30, 41, 59, 0.95); 
+            transform: scale(0.92);
+            border-color: rgba(148, 163, 184, 0.6);
+        }
+        
+        .btn-jump { top: -20px; left: 50%; transform: translateX(-50%); }
+        .btn-crouch { bottom: -20px; left: 50%; transform: translateX(-50%); }
+        .btn-break { left: -20px; top: 50%; transform: translateY(-50%); }
+        .btn-place { right: -20px; top: 50%; transform: translateY(-50%); }
+        
+        .stick { 
+            position: absolute; 
+            width: 100px; 
+            height: 100px; 
+            border-radius: 50%; 
+            background: rgba(2, 6, 23, 0.6); 
+            border: 1px solid rgba(71, 85, 105, 0.3); 
+            touch-action: none; 
+            z-index: 30; 
+            backdrop-filter: blur(4px);
+        }
+        .knob { 
+            position: absolute; 
+            width: 36px; 
+            height: 36px; 
+            border-radius: 50%; 
+            background: rgba(226, 232, 240, 0.95); 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%,-50%); 
+            box-shadow: 0 2px 6px rgba(0,0,0,0.25); 
+            pointer-events: none; 
+        }
+        
+        #right-stick {
+            display: none; /* 视角控制已改为右半屏滑动，圆圈隐藏 */
+        }
+        
+        #loading { 
+            position: fixed; 
+            inset: 0; 
+            background: #020617; 
+            z-index: 10000; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            color: #e2e8f0; 
+        }
+        .progress-track { 
+            width: 280px; 
+            height: 3px; 
+            background: rgba(30, 41, 59, 0.8); 
+            border-radius: 2px; 
+            overflow: hidden; 
+            margin-top: 16px; 
+        }
+        .progress-bar { 
+            height: 100%; 
+            background: #8BC34A; 
+            width: 0%; 
+            transition: width 0.3s; 
+        }
+        
+        .crosshair { 
+            position: absolute; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%,-50%); 
+            width: 16px; 
+            height: 16px; 
+            pointer-events: none; 
+            z-index: 50; 
+        }
+        .crosshair::before, .crosshair::after { 
+            content: ''; 
+            position: absolute; 
+            background: rgba(255,255,255,0.9); 
+        }
+        .crosshair::before { width: 16px; height: 2px; top: 7px; left: 0; }
+        .crosshair::after { width: 2px; height: 16px; top: 0; left: 7px; }
+        
+        .hotbar-container { 
+            position: absolute; 
+            bottom: 12px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            display: flex; 
+            gap: 4px; 
+            padding: 6px; 
+            background: rgba(2, 6, 23, 0.85); 
+            border: 1px solid rgba(51, 65, 85, 0.5); 
+            border-radius: 4px; 
+            backdrop-filter: blur(8px); 
+            z-index: 20;
+        }
+        
+        .biome-tag {
+            position: absolute; 
+            top: 10px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            padding: 4px 12px; 
+            background: rgba(2, 6, 23, 0.85); 
+            border: 1px solid rgba(51, 65, 85, 0.5); 
+            border-radius: 12px; 
+            color: #94a3b8; 
+            font-size: 11px; 
+            pointer-events: none; 
+            font-family: ui-monospace, monospace;
+        }
+
+        .damage-indicator {
+            position: absolute;
+            color: #ff4444;
+            font-weight: bold;
+            font-size: 16px;
+            pointer-events: none;
+            animation: damageFloat 1s ease-out forwards;
+            text-shadow: 2px 2px 0 #000;
+            z-index: 100;
+        }
+
+        @keyframes damageFloat {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-30px) scale(1.2); opacity: 0; }
+        }
+
+        /* 生存模式UI */
+        .survival-ui {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            z-index: 20;
+        }
+
+        .bar-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .bar-label {
+            color: #fff;
+            font-size: 12px;
+            font-weight: bold;
+            min-width: 40px;
+        }
+
+        .bar-bg {
+            width: 120px;
+            height: 12px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .health-fill {
+            height: 100%;
+            background: linear-gradient(to bottom, #ff5555, #cc0000);
+            transition: width 0.3s ease;
+        }
+
+        .hunger-fill {
+            height: 100%;
+            background: linear-gradient(to bottom, #ffaa44, #cc8800);
+            transition: width 0.3s ease;
+        }
+
+        .bar-value {
+            color: #fff;
+            font-size: 11px;
+            min-width: 35px;
+            text-align: right;
+        }
+
+        /* 挖掘进度条 */
+        .mining-progress {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 6px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 1px;
+            overflow: hidden;
+            display: none;
+            z-index: 60;
+        }
+
+        .mining-fill {
+            height: 100%;
+            background: #8BC34A;
+            width: 0%;
+            transition: width 0.05s linear;
+        }
+
+        /* 死亡屏幕 */
+        .death-screen {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .death-title {
+            color: #ff4444;
+            font-size: 48px;
+            font-weight: bold;
+            text-shadow: 3px 3px 0 #000;
+            margin-bottom: 20px;
+        }
+
+        .death-score {
+            color: #fff;
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+
+        .respawn-btn {
+            padding: 12px 40px;
+            background: linear-gradient(to bottom, #7a7a7a, #5a5a5a);
+            border: 3px solid #000;
+            color: #fff;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #3d3d3d;
+        }
+
+        .respawn-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #3d3d3d;
+        }
+
+        /* 时间显示 */
+        .time-display {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 4px 12px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 4px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .day { color: #ffdd44; }
+        .night { color: #8888ff; }
+
+        /* 掉落物 */
+        .dropped-item {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            pointer-events: none;
+            z-index: 15;
+        }
+
+        .item-count {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            font-size: 10px;
+            color: #fff;
+            text-shadow: 1px 1px 0 #000;
+            font-weight: bold;
+        }
+
+        /* ==================== 命令控制台 ==================== */
+        .command-console {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 500;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .command-console-content {
+            width: 90%;
+            max-width: 700px;
+            background: rgba(20, 20, 30, 0.95);
+            border: 3px solid #555;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .command-header {
+            background: linear-gradient(to bottom, #444, #333);
+            padding: 12px 16px;
+            border-bottom: 2px solid #222;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .command-title {
+            color: #0f0;
+            font-size: 16px;
+            font-weight: bold;
+            font-family: 'PixelWeb', 'Press Start 2P', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        .command-close {
+            width: 32px;
+            height: 32px;
+            background: #666;
+            border: 2px solid #000;
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .command-close:hover {
+            background: #c44;
+        }
+
+        .command-output {
+            flex: 1;
+            min-height: 300px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.7);
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .command-line {
+            margin: 4px 0;
+            padding: 4px 8px;
+            border-radius: 3px;
+        }
+
+        .command-input-line {
+            color: #0f0;
+        }
+
+        .command-output-line {
+            color: #ccc;
+        }
+
+        .command-error-line {
+            color: #f44;
+        }
+
+        .command-success-line {
+            color: #4f4;
+        }
+
+        .command-info-line {
+            color: #88f;
+        }
+
+        .command-input-area {
+            display: flex;
+            padding: 12px 16px;
+            background: rgba(30, 30, 40, 0.95);
+            border-top: 2px solid #222;
+        }
+
+        .command-prompt {
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 10px 12px;
+            background: #222;
+            border: 2px solid #444;
+            border-right: none;
+            border-radius: 4px 0 0 4px;
+        }
+
+        .command-input {
+            flex: 1;
+            padding: 10px 12px;
+            background: #111;
+            border: 2px solid #444;
+            border-left: none;
+            border-radius: 0 4px 4px 0;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .command-input:focus {
+            border-color: #0f0;
+        }
+
+        .command-execute {
+            margin-left: 12px;
+            padding: 10px 20px;
+            background: linear-gradient(to bottom, #4CAF50, #388E3C);
+            border: 2px solid #000;
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: 'PixelWeb', 'Press Start 2P', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-size: 10px;
+        }
+
+        .command-execute:hover {
+            background: linear-gradient(to bottom, #66BB6A, #4CAF50);
+        }
+
+        /* ==================== 合成系统UI ==================== */
+        .crafting-screen {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 10, 15, 0.98);
+            backdrop-filter: blur(16px);
+            z-index: 200;
+            display: none;
+            flex-direction: row;
+            overflow: hidden;
+        }
+
+        /* 左侧配方分类 */
+        .crafting-sidebar {
+            width: 220px;
+            background: rgba(15, 20, 30, 0.95);
+            border-right: 1px solid rgba(0, 212, 255, 0.2);
+            padding: 16px 12px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .crafting-sidebar-title {
+            color: #00d4ff;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 8px 12px;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.3);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .crafting-category {
+            padding: 10px 14px;
+            background: rgba(30, 40, 55, 0.6);
+            border: 1px solid rgba(71, 85, 105, 0.4);
+            border-radius: 6px;
+            color: #94a3b8;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .crafting-category:hover {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: rgba(0, 212, 255, 0.5);
+            color: #e2e8f0;
+        }
+
+        .crafting-category.active {
+            background: rgba(0, 212, 255, 0.15);
+            border-color: #00d4ff;
+            color: #00d4ff;
+            box-shadow: 0 0 12px rgba(0, 212, 255, 0.2);
+        }
+
+        .crafting-category-count {
+            background: rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        /* 右侧主区域 */
+        .crafting-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .crafting-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .crafting-title {
+            color: #00d4ff;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+        }
+
+        .crafting-close {
+            width: 40px;
+            height: 40px;
+            background: rgba(30, 40, 55, 0.8);
+            border: 1px solid rgba(71, 85, 105, 0.5);
+            border-radius: 8px;
+            color: #94a3b8;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .crafting-close:hover {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: rgba(239, 68, 68, 0.5);
+            color: #ef4444;
+        }
+
+        /* 配方网格 */
+        .recipes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            padding: 10px;
+        }
+
+        .recipe-card {
+            background: rgba(20, 25, 35, 0.9);
+            border: 1px solid rgba(71, 85, 105, 0.4);
+            border-radius: 12px;
+            padding: 16px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .recipe-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .recipe-card:hover {
+            border-color: rgba(0, 212, 255, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0, 212, 255, 0.15);
+        }
+
+        .recipe-card:hover::before {
+            opacity: 1;
+        }
+
+        .recipe-card.can-craft {
+            border-color: rgba(139, 195, 74, 0.5);
+        }
+
+        .recipe-card.can-craft:hover {
+            border-color: rgba(139, 195, 74, 0.8);
+            box-shadow: 0 8px 32px rgba(139, 195, 74, 0.15);
+        }
+
+        .recipe-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .recipe-result {
+            width: 48px;
+            height: 48px;
+            background: rgba(15, 23, 42, 0.95);
+            border: 2px solid rgba(0, 212, 255, 0.4);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .recipe-result-count {
+            position: absolute;
+            bottom: -4px;
+            right: -4px;
+            background: #00d4ff;
+            color: #000;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+
+        .recipe-info {
+            flex: 1;
+        }
+
+        .recipe-name {
+            color: #e2e8f0;
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .recipe-category-tag {
+            color: #64748b;
+            font-size: 11px;
+        }
+
+        /* 合成网格预览 */
+        .recipe-pattern {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px;
+            background: rgba(10, 15, 25, 0.6);
+            border-radius: 8px;
+        }
+
+        .crafting-grid-preview {
+            display: grid;
+            gap: 3px;
+        }
+
+        .crafting-grid-preview.grid-2x2 {
+            grid-template-columns: repeat(2, 32px);
+        }
+
+        .crafting-grid-preview.grid-3x3 {
+            grid-template-columns: repeat(3, 32px);
+        }
+
+        .crafting-slot-preview {
+            width: 32px;
+            height: 32px;
+            background: rgba(30, 40, 55, 0.8);
+            border: 1px solid rgba(71, 85, 105, 0.4);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .crafting-slot-preview.filled {
+            border-color: rgba(0, 212, 255, 0.4);
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .crafting-arrow {
+            color: #00d4ff;
+            font-size: 20px;
+        }
+
+        .crafting-result-preview {
+            width: 40px;
+            height: 40px;
+            background: rgba(15, 23, 42, 0.95);
+            border: 2px solid rgba(139, 195, 74, 0.5);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 材料列表 */
+        .recipe-materials {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(71, 85, 105, 0.3);
+        }
+
+        .materials-title {
+            color: #64748b;
+            font-size: 11px;
+            margin-bottom: 8px;
+        }
+
+        .materials-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .material-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            background: rgba(30, 40, 55, 0.6);
+            border: 1px solid rgba(71, 85, 105, 0.4);
+            border-radius: 6px;
+            font-size: 12px;
+        }
+
+        .material-item.has-enough {
+            border-color: rgba(139, 195, 74, 0.4);
+            background: rgba(139, 195, 74, 0.1);
+        }
+
+        .material-item:not(.has-enough) {
+            border-color: rgba(239, 68, 68, 0.4);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .material-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .material-name {
+            color: #94a3b8;
+        }
+
+        .material-count {
+            color: #e2e8f0;
+            font-weight: bold;
+        }
+
+        /* 合成按钮 */
+        .craft-btn {
+            width: 100%;
+            margin-top: 12px;
+            padding: 12px;
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            border: none;
+            border-radius: 8px;
+            color: #000;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .craft-btn:hover {
+            background: linear-gradient(135deg, #33ddff, #00aadd);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.4);
+        }
+
+        .craft-btn:disabled {
+            background: rgba(71, 85, 105, 0.4);
+            color: #64748b;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* 合成按钮（游戏内） */
+        .crafting-btn-game {
+            position: absolute;
+            bottom: 70px;
+            right: 12px;
+            padding: 8px 16px;
+            background: rgba(0, 212, 255, 0.2);
+            border: 1px solid rgba(0, 212, 255, 0.5);
+            border-radius: 6px;
+            color: #00d4ff;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            z-index: 25;
+        }
+
+        .crafting-btn-game:hover {
+            background: rgba(0, 212, 255, 0.3);
+            box-shadow: 0 0 16px rgba(0, 212, 255, 0.3);
+        }
+
+        /* 搜索框 */
+        .crafting-search {
+            margin-bottom: 16px;
+        }
+
+        .crafting-search input {
+            width: 100%;
+            max-width: 400px;
+            padding: 12px 16px;
+            background: rgba(20, 25, 35, 0.9);
+            border: 1px solid rgba(71, 85, 105, 0.4);
+            border-radius: 8px;
+            color: #e2e8f0;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .crafting-search input:focus {
+            border-color: rgba(0, 212, 255, 0.6);
+            box-shadow: 0 0 12px rgba(0, 212, 255, 0.15);
+        }
+
+        .crafting-search input::placeholder {
+            color: #64748b;
+        }
+
+        /* ==================== 游戏内菜单 ==================== */
+        .game-menu {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 500;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .game-menu-content {
+            background: rgba(0, 0, 0, 0.85);
+            border: 3px solid #000;
+            padding: 40px;
+            min-width: 280px;
+            text-align: center;
+            box-shadow: 
+                inset 0 2px 0 rgba(255, 255, 255, 0.1),
+                0 10px 40px rgba(0, 0, 0, 0.8);
+        }
+
+        .game-menu-title {
+            font-family: 'PixelWeb', 'Press Start 2P', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-size: 20px;
+            color: #e2e8f0;
+            text-shadow: 2px 2px 0 #000;
+            margin-bottom: 30px;
+        }
+
+        .game-menu-btn {
+            width: 100%;
+            height: 50px;
+            background: linear-gradient(to bottom, #7a7a7a 0%, #6a6a6a 100%);
+            border: 3px solid #000;
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            box-shadow: 
+                inset 0 2px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.3),
+                0 4px 0 #3d3d3d,
+                0 6px 10px rgba(0, 0, 0, 0.5);
+            text-shadow: 2px 2px 0 #000;
+            margin-bottom: 15px;
+        }
+
+        .game-menu-btn:hover {
+            background: linear-gradient(to bottom, #8a8a8a 0%, #7a7a7a 100%);
+        }
+
+        .game-menu-btn:active {
+            transform: translateY(4px);
+            box-shadow: 
+                inset 0 2px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.3),
+                0 0 0 #3d3d3d,
+                0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .game-menu-btn.save-btn {
+            background: linear-gradient(to bottom, #8BC34A 0%, #689F38 100%);
+            box-shadow: 
+                inset 0 2px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.3),
+                0 4px 0 #33691E,
+                0 6px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .game-menu-btn.save-btn:hover {
+            background: linear-gradient(to bottom, #9CCC65 0%, #7CB342 100%);
+        }
+
+        .game-menu-btn.save-btn:active {
+            box-shadow: 
+                inset 0 2px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.3),
+                0 0 0 #33691E,
+                0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        /* 保存进度弹窗 */
+        .save-progress-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 600;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .save-progress-content {
+            text-align: center;
+        }
+
+        .save-progress-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(139, 195, 74, 0.3);
+            border-top-color: #8BC34A;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .save-progress-text {
+            color: #e2e8f0;
+            font-size: 18px;
+            text-shadow: 1px 1px 0 #000;
+        }
+
+        /* ==================== 熔炉交互 ==================== */
+        .furnace-interact-btn {
+            position: absolute;
+            bottom: 200px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(to bottom, #FF6B35 0%, #D84315 100%);
+            border: 3px solid #000;
+            color: #fff;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 
+                inset 0 2px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.3),
+                0 4px 0 #BF360C,
+                0 6px 10px rgba(0, 0, 0, 0.5);
+            text-shadow: 1px 1px 0 #000;
+            animation: furnaceBtnPulse 1.5s ease-in-out infinite;
+            z-index: 100;
+        }
+
+        @keyframes furnaceBtnPulse {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.05); }
+        }
+
+        .furnace-interact-btn:active {
+            transform: translateX(-50%) translateY(4px);
+            box-shadow: 
+                inset 0 2px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.3),
+                0 0 0 #BF360C,
+                0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        /* 熔炉界面 */
+        .furnace-ui {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(4px);
+            z-index: 500;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .furnace-content {
+            background: rgba(20, 25, 35, 0.98);
+            border: 3px solid #000;
+            padding: 30px;
+            min-width: 400px;
+            text-align: center;
+            box-shadow: 
+                inset 0 2px 0 rgba(255, 255, 255, 0.1),
+                0 10px 40px rgba(0, 0, 0, 0.8);
+        }
+
+        .furnace-title {
+            font-family: 'PixelWeb', 'Press Start 2P', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-size: 20px;
+            color: #FF6B35;
+            text-shadow: 2px 2px 0 #000;
+            margin-bottom: 25px;
+        }
+
+        .furnace-slots {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .furnace-slot-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .furnace-slot-group label {
+            color: #94a3b8;
+            font-size: 12px;
+        }
+
+        .furnace-slot {
+            width: 64px;
+            height: 64px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 3px solid #475569;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .furnace-slot:hover {
+            border-color: #FF6B35;
+        }
+
+        .furnace-slot.selected {
+            border-color: #FF6B35;
+            box-shadow: 0 0 15px rgba(255, 107, 53, 0.5);
+        }
+
+        .furnace-slot.output {
+            cursor: pointer;
+            background: rgba(139, 195, 74, 0.1);
+            border-color: rgba(139, 195, 74, 0.5);
+        }
+
+        .furnace-slot .slot-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .furnace-slot .slot-content img {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+        }
+
+        .furnace-arrow {
+            font-size: 24px;
+            color: #64748b;
+        }
+
+        .furnace-progress {
+            width: 100%;
+            height: 8px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid #000;
+            margin-bottom: 20px;
+        }
+
+        .furnace-progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, #FF6B35, #FFB74D);
+            transition: width 0.1s linear;
+        }
+
+        .furnace-close-btn {
+            padding: 12px 32px;
+            background: linear-gradient(to bottom, #7a7a7a 0%, #6a6a6a 100%);
+            border: 3px solid #000;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 
+                inset 0 2px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.3),
+                0 4px 0 #3d3d3d,
+                0 6px 10px rgba(0, 0, 0, 0.5);
+            text-shadow: 1px 1px 0 #000;
+        }
+
+        .furnace-close-btn:hover {
+            background: linear-gradient(to bottom, #8a8a8a 0%, #7a7a7a 100%);
+        }
+
+        .furnace-close-btn:active {
+            transform: translateY(4px);
+            box-shadow: 
+                inset 0 2px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.3),
+                0 0 0 #3d3d3d,
+                0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        /* 熔炉背包 */
+        .furnace-inventory {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid #475569;
+        }
+
+        .furnace-inventory label {
+            display: block;
+            color: #94a3b8;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .furnace-inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            gap: 4px;
+            max-width: 360px;
+            max-height: 200px;
+            overflow-y: auto;
+            margin: 0 auto;
+            padding-right: 5px;
+        }
+        
+        .furnace-inventory-grid::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .furnace-inventory-grid::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .furnace-inventory-grid::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 3px;
+        }
+
+        .furnace-inv-slot {
+            width: 36px;
+            height: 36px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid #475569;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .furnace-inv-slot:hover {
+            border-color: #FF6B35;
+        }
+
+        .furnace-inv-slot img {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+        }
+
+        .furnace-inv-slot .slot-count {
+            position: absolute;
+            bottom: 1px;
+            right: 2px;
+            font-size: 10px;
+            color: #fff;
+            text-shadow: 1px 1px 0 #000;
+            font-weight: bold;
+        }
+
+        .furnace-inv-slot.empty {
+            opacity: 0.3;
+        }
+    
+        /* ==================== 火焰粒子系统 ==================== */
+        .fire-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, #ffdd44 0%, #ff6600 50%, transparent 100%);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: fireParticleFloat 1.2s ease-out forwards;
+            z-index: 18;
+        }
+
+        @keyframes fireParticleFloat {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            50% { transform: translateY(-15px) scale(1.5); opacity: 0.8; }
+            100% { transform: translateY(-30px) scale(0.5); opacity: 0; }
+        }
+
+        .smoke-particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: radial-gradient(circle, rgba(100,100,100,0.5) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: smokeFloat 2s ease-out forwards;
+            z-index: 17;
+        }
+
+        @keyframes smokeFloat {
+            0% { transform: translateY(0) scale(0.5); opacity: 0.6; }
+            100% { transform: translateY(-40px) scale(2); opacity: 0; }
+        }
+
+        /* 火焰方块发光效果 */
+        .fire-glow {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, rgba(255,150,0,0.3) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 16;
+            animation: fireGlowPulse 0.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes fireGlowPulse {
+            0% { opacity: 0.6; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1.2); }
+        }
+/* ==================== UI 视觉升级（覆盖层，置于文件末尾生效） ==================== */
+
+/* 顶部栏 */
+.topbar {
+    height: 40px;
+    background: rgba(2, 6, 23, 0.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+    z-index: 20;
+    flex-shrink: 0;
+}
+.topbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #e2e8f0;
+}
+.topbar-logo {
+    width: 16px;
+    height: 16px;
+    background: linear-gradient(135deg, #9CCC65 0%, #7CB342 100%);
+    border: 1px solid #558B2F;
+    border-radius: 3px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+}
+.topbar-actions { display: flex; gap: 6px; }
+
+.topbar-btn {
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    color: #cbd5e1;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    cursor: pointer;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+}
+.topbar-btn:hover {
+    background: rgba(51, 65, 85, 0.9);
+    border-color: rgba(148, 163, 184, 0.45);
+    color: #f1f5f9;
+}
+.topbar-btn:active { transform: scale(0.95); }
+.topbar-btn-accent {
+    background: rgba(0, 212, 255, 0.12);
+    border-color: rgba(0, 212, 255, 0.4);
+    color: #22d3ee;
+}
+.topbar-btn-accent:hover {
+    background: rgba(0, 212, 255, 0.22);
+    border-color: rgba(0, 212, 255, 0.7);
+    color: #67e8f9;
+}
+.topbar-btn-command {
+    background: rgba(34, 197, 94, 0.12);
+    border-color: rgba(34, 197, 94, 0.4);
+    color: #4ade80;
+}
+
+/* HUD 面板：更柔和的圆角与描边 */
+.ui-panel {
+    border-radius: 8px;
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+
+/* 准星：任何背景下都清晰可见 */
+.crosshair { mix-blend-mode: difference; opacity: 0.9; }
+
+/* 快捷栏槽位：MC 式粗描边 + 选中高亮 */
+.slot {
+    border: 2px solid rgba(71, 85, 105, 0.6);
+    border-radius: 4px;
+}
+.slot:hover { border-color: rgba(148, 163, 184, 0.8); }
+.slot.active {
+    border-color: #fbbf24;
+    box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.4), 0 0 12px rgba(251, 191, 36, 0.25);
+}
+
+/* 群系 / 时间标签：药丸式浮层 */
+.biome-tag, .time-display {
+    border-radius: 999px !important;
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* 按钮通用焦点样式 */
+button:focus-visible {
+    outline: 2px solid #38bdf8;
+    outline-offset: 2px;
+}
+
+/* 弹层进入动画 */
+.inventory-screen, .crafting-screen, .game-menu-content {
+    animation: panelFadeUp 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes panelFadeUp {
+    from { opacity: 0; transform: translateY(10px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* 减少动态效果偏好支持 */
+@media (prefers-reduced-motion: reduce) {
+    .block-preview, .inventory-screen, .crafting-screen, .game-menu-content { animation: none !important; }
+}
