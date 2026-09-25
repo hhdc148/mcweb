@@ -1,1 +1,2 @@
 # mcweb
+![mcweb](panorama.jpg)
