@@ -45,33 +45,6 @@
 
 ![首页全景](panorama.jpg)
 
-### 游戏截图
-
-> 📌 把你的截图放进仓库根目录（例如 `screenshot-1.png`），然后把下面每一行的文件名替换成实际图片名即可。建议用相对路径，保证图片在任何分支、任何域名下都能正常显示。
-
-![游戏截图 1](screenshot-1.png)
-
-![游戏截图 2](screenshot-2.png)
-
-![游戏截图 3](screenshot-3.png)
-
-<details>
-<summary>点击展开更多截图</summary>
-
-![游戏截图 4](screenshot-4.png)
-
-![游戏截图 5](screenshot-5.png)
-
-</details>
-
-> 💡 **图片放哪？** 只要图片提交到仓库根目录，Markdown 里写文件名即可。若图片放在子目录（如 `images/`），则写成 `images/screenshot-1.png`。
->
-> 💡 **需要外链？** 使用 GitHub Raw 地址：
-> `https://raw.githubusercontent.com/hhdc148/mcweb/main/panorama.jpg`
-> （分支名以实际为准，可能是 `main` 或 `master`）
-
----
-
 ## 功能特性
 
 ### 🎮 游戏模式
